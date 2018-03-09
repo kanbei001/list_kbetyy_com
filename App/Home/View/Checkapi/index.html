@@ -1,0 +1,188 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="__PUBLIC__/lib/html5shiv.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="__PUBLIC__/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+</head>
+	<body>
+			<form action="javascript:">
+			<div class="mt-20">
+				<h1>{$questionnaire.name}</h1>
+				<table class="table table-border table-bordered table-hover table-bg table-sort">
+					<thead>
+					<tr class="text-c">
+						<th width="100"></th>
+					</tr>
+					</thead>
+						<tr>
+							<br>
+								姓名：<input type="text" name="client"><span class="client"></span></br>
+								电话：<input type="text" name="phone"><span class="phone"></span></br>
+								邮箱：<input type="text" name="email"><span class="email"></span>
+							</th>
+						</tr>
+						<php>
+							foreach($questions as $k=>$vo){ </php>
+								<tr>
+									<th>
+										<php>
+											$num +=1; //编号
+											echo $num.','.$vo['description'].'<br>'; //题目
+												foreach($vo['content'] as $choose) {
+													if($vo['type'] == 'choose') {
+														echo "<input type='checkbox' value='choose' name='".$choose[0]."'>".$choose[1];
+													}
+													if($vo['type'] == 'write') {
+														echo "<textarea name='".$choose[0]."'></textarea>";
+													}
+												}
+										</php>
+									</th>
+								</tr>
+						<php>}
+						</php>
+
+					</tbody>
+				</table>
+			</div>
+			<input type="submit" value="提交">
+		</form>
+
+	<div class="report" style="display:none">
+		<h3>测试报告</h3>
+	</div>
+	<style>
+		.report h3{
+			text-align:center;
+			text-align:center;
+		}
+		.report{
+			margin: auto;
+			border:solid #BAC498 1px;
+			width:500px;
+			height:500px;
+		}
+		.mt-20 h1{
+			text-align:center;
+		}
+	</style>
+	<!--_footer 作为公共模版分离出去-->
+	<script type="text/javascript" src="__PUBLIC__/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/lib/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/h-ui/js/H-ui.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+	<!--请在下方写此页面业务相关的脚本-->
+	<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script>
+		/**
+		 * 数据提交
+		 */
+		$('form').submit(function(){
+            var data = $("form").serializeArray();
+            postData = {};
+            $(data).each(function(i) {
+                postData[this.name] = this.value;
+            });
+			console.log(postData);
+			$.ajax({
+				type:'POST',
+				url:'__CONTROLLER__/receive',
+				data:postData,
+				success:function(data){
+				    if(data['error'] == 1) {
+                        $('.report').css('display','block');
+                        $('.report').empty();
+				        $('.report').append(
+				            	"<p>总题数:"+data['report_all_questions']+"</p>"
+							+	"<p>选择题数:"+data['report_choose_questions']+"</p>"
+							+	"<p>总选择数"+data['report_choose_sub']+"</p>"
+							+	"<p>填写题数:"+data['report_write_questions']+"</p>"
+							+	"<p>计算结果:</p>"
+						);
+						for(var i in data['report_choose_del']) {
+							$('.report').append(
+									"&nbsp &nbsp"
+								+	data['report_choose_del'][i]
+								+	"<br>"
+							);
+						}
+                        $('.report').append(
+                            "符合情况"
+						);
+						for(var i in data['advice']){
+							$('.report').append(
+							    	"&nbsp &nbsp"
+								+	data['advice'][i]
+								+	"<br>"
+							);
+						}
+						//如果有填写题,用户不有提交联系方式就提醒。如果不有就不提醒
+                        if(data['parameter_status'] == 1){
+						    $('.report').append(
+						        "<p>提示:"+data['parameter_detail']+"</p>"
+							);
+                        }else{
+						    $('.report').append(
+                                "<p>提示:医生会在3小时内回复您的问题，请注意查收邮件</p>"
+							);
+						}
+						$('.report').append(
+						    '<a href="'+data['url']+'" >下载pdf格式</a>'
+						);
+
+					}else{
+				        alert(data['error_detail']);
+					}
+				}
+			});
+		});
+
+        /**
+		 * 格式判断
+         */
+        $('input[type=text]').blur(function(){
+            var name  = $(this).attr('name');
+            var value = $(this).val();
+			switch(name) {
+				case 'client':
+					value==''?$('.phone').text('请办输入姓名'):''
+					;break;
+				case 'email':
+				    if(!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value))) {
+				        $('.email').text('邮箱格式不规范！');
+				        return;
+					}
+                    $('.email').text('');
+					break;
+				case 'phone':
+                    if(!(/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|17[0-9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/.test(value))){
+                        $('.phone').text('手机号码不规范');
+                        return;
+                    }
+                    $('.phone').text('');
+                    break;
+			}
+
+		})
+	</script>
+</body>
+</html>

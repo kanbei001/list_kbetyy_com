@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>康贝儿童医院测评结果评估报告</title>
+</head>
+<style type="text/css">
+	html{
+	font-family: "microsoft yahei",arial;
+ 	font-size: 100%;
+}
+body{
+	margin:0;
+	margin:auto;
+}
+li{
+	list-style: none;
+}
+@media only screen and (max-width : 650px) {  
+aside{
+	display: none;
+	}
+	.post{
+		width: 100%;
+		float: none;
+		padding: 5px;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+	}
+	.grid{
+		width: 100%;
+	}
+	.grid .item{
+			width: 32%;
+		}
+}
+
+@media screen and (max-width: 500px){
+	nav ul{
+		display: none;
+		padding:0;
+		margin: 0 5px;
+	}
+	#menuIcon{
+		display: block;
+		text-align: right;
+		padding: 0 5px;
+		border-bottom: 1px #9c9c9c solid;
+	}
+	nav ul li{
+		width: 100%;
+	}
+	nav ul li:hover{
+		background-color: #555;
+	}
+}
+@media screen and (max-width: 420px){
+	.grid .item{
+		width: 100%;
+		margin-bottom: 5px;
+	}
+}
+h1{
+	text-align: center;
+	font-size:1.8rem;
+}
+article{
+
+}
+ /*footer*/
+ footer{
+ 	width: 100%;
+ 	text-align: center;
+ 	clear:both;
+ }
+
+ footer li{
+ 	display: inline-block;
+ }
+ #main{
+ 	width:94%;
+ 	margin:auto;
+ }
+ .main1{
+ 	width: 94%;
+ 	margin:auto;
+ }
+ p{
+ 	font-size:1.3rem;
+ }
+ strong{
+ 	font-size:1.5rem;
+ }
+ ul{
+ 	font-size:1.3rem;
+ }
+</style>
+<body>
+	<body>
+		<div id="main">
+			<div class="main1">
+				<section class="post">
+					<article>
+						<h1>
+							深圳市康贝儿童医院测评结果评估表
+						</h1>
+						<p id="subtitle1"><strong>测评结果：</strong></p>
+						<p>
+							<php>
+								foreach($system_grade[0] as $v) {
+								echo $v.'<br>';
+								}
+							</php>
+
+
+						</p>
+						</section>
+						
+						<p id="subtitle3"><strong>符合情况：</strong></p>
+							<p>
+								<php>
+									foreach($system_grade[1] as $v) {
+										echo $v.'<br>';
+									}
+									if($email_address) {
+										echo "<br>(更详细的内容，工作人员审阅后将会发送邮件到".$email_address."，请注意查收！)";
+									}
+								</php>
+							</p>
+						<p id="subtitle5"><strong>医生建议</strong></p>
+						<p>
+							建议立即到院检查，或者咨询专业医生进行确诊，如需帮助请拨打0775-25111120或者登入官网<a href="www.kbetyy.com">www.kbetyy.com</a>
+						</p>
+					</article>
+					</section>
+			<footer>
+					<hr>
+					<ul>
+						<li>
+							<small>
+								<a href="www.kbetyy.com">深圳市康贝儿童医院
+								</a>
+							</small>
+						</li>
+						<li><small>0755-25111120</small> </li>
+					</ul>
+			</footer>
+		</div>
+	</div>
+		
+
+</body>
+</html>

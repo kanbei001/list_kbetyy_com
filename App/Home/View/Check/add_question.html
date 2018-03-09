@@ -1,0 +1,310 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="__PUBLIC__/lib/html5shiv.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/lib/respond.min.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui/css/H-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/css/H-ui.admin.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/lib/Hui-iconfont/1.0.8/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/skin/default/skin.css" id="skin" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/css/style.css" />
+	<!--[if IE 6]>
+	<script type="text/javascript" src="__PUBLIC__/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+	<title>添加管理员 - 管理员管理 - H-ui.admin v3.1</title>
+	<meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+	<meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<div class="page-container">
+	<div id="tab-system" class="HuiTab">
+		<div class="tabBar cl">
+			<span>自定义添加</span>
+			<span>从题库导入</span>
+		</div>
+		<div class="tabCon">
+			<article class="page-container">
+				<form class="form form-horizontal" id="form-admin-add" action="javasceipt:">
+					<input type="hidden" value="{$questionnaire_id}" name="questionnaire">
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-3">类型：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<div class="radio-box">
+								<input name="type" type="radio" id="sex-1" checked="checked" value='choose'>
+								<label for="sex-1">复选题</label>
+							</div>
+							<div class="radio-box">
+								<input type="radio" id="sex-2" name="type" value="write">
+								<label for="sex-2">自答题</label>
+							</div>
+						</div>
+					</div>
+					<div class="row cl">
+						<label class="form-label col-xs-4 col-sm-3">题目：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							<textarea name="remark" cols="" rows="" class="textarea"  placeholder="描述你的问题...100个字符以内" dragonfly="true" ></textarea>
+							<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+						</div>
+					</div>
+
+					<div class="row cl choose_block">
+						<label class="form-label col-xs-4 col-sm-3">已选择：</label>
+						<div class="formControls col-xs-8 col-sm-9 checked">
+						</div>
+					</div>
+					<div class="row cl choose_block">
+						<label class="form-label col-xs-4 col-sm-3">复选描述：</label>
+						<div class="formControls col-xs-8 col-sm-9">
+							选择：<input type="text"  value="" placeholder="" class="choose" name="choose">
+							病种：
+							<select name="keshi">
+								<option value="0">选择科室</option>
+								<foreach name="keshi" item="vo">
+									<option value="{$vo.id}">{$vo.section_name}</option>
+								</foreach>
+							</select>
+							<select name="bingzhong">
+								<option value="0">病种</option>
+								<foreach name="keshi" item="vo">
+									<option value="{$vo.id}">{$vo.section_name}</option>
+								</foreach>
+							</select>
+							<butto class="btn btn-primary radius" onclick="save()">确定</butto>
+						</div>
+						<div class="input_hidden"></div>
+					</div>
+					<div class="row cl">
+						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+							<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+						</div>
+					</div>
+				</form>
+			</article>
+		</div>
+		<div class="tabCon page">
+
+		</div>
+	</div>
+</div>
+
+<style>
+	.choose{
+		box-sizing: border-box;
+		border: solid 1px #ddd;
+		-webkit-transition: all .2s linear 0s;
+		-moz-transition: all .2s linear 0s;
+		-o-transition: all .2s linear 0s;
+		transition: all .2s linear 0s;
+	}
+</style>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+	/**
+	 *选项卡
+	 */
+    $(function(){
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+        $("#tab-system").Huitab({
+            index:0
+        });
+    });
+    /**
+	 *选择类型
+	 */
+	$('input[name=type]').change(function(){
+	    var val = $(this).val();
+	    switch(val){
+			case 'choose': $('.choose_block').css('display','block');break;
+            case 'write': $('.choose_block').css('display','none');break;
+	    }
+	});
+
+	 /**
+     *计算文本域字数
+     */
+    $(".textarea").keyup(function(){
+        var str = $('.textarea').val();
+        var lenth = str.length;
+        $('.textarea-length').text(lenth);
+    });
+
+    /**
+     * 病种联动
+     */
+    $("select[name=keshi]").change(function(){
+        var keshi = $("select[name=keshi]").val();
+        if(keshi == 0) {
+            $("select[name=bingzhong]").empty();
+            $("select[name=bingzhong]").append(
+                "<option value='0'>请选择病种</option>"
+            );
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '__CONTROLLER__/ajax_bingzhong',
+            data:{keshi:keshi},
+            dataType: 'json',
+            success: function(data){
+                if(data.status==1) {
+                    $("select[name=bingzhong]").empty();
+
+                    for(var i in data) {
+                        if(i != 'status') {
+                            $("select[name=bingzhong]").append(
+                                "<option value='"+data[i]['id']+"'>"+data[i]['bingzhong_name']+"</option>"
+                            );
+                        }
+                    }
+                }else{
+                    var str = data['error_detail'];
+                    $("select[name=bingzhong]").empty();
+                    $("select[name=bingzhong]").append(
+                        "<option value='0'>请选择病种</option>"
+                    );
+                    layer.msg(str,{icon:2,time:1500});
+                }
+            },
+        });
+    });
+
+    /**
+     * 确定选择
+     */
+    var num = 0;
+    function save() {
+        num++;
+        var choose    = $('.choose').val();
+        var keshi     = $('select[name=keshi]').val();
+        var bingzhong = $('select[name=bingzhong]').val();
+        if(choose == '') {
+            layer.msg('请写入选择描述',{icon:2,time:1500});
+            return;
+        }
+        if(keshi == 0){
+            layer.msg('请选择科室',{icon:2,time:1500});
+            return;
+        }
+        if(bingzhong == 0) {
+            layer.msg('请选择病种',{icon:2,time:1500});
+            return;
+        }
+        var str = choose + '|'+ $('select[name=keshi] option:selected').text() + '| ' + $('select[name=bingzhong] option:selected').text();
+        $('.checked').append(
+            "<input type='text' value='" + str+ "' class='btn btn-primary radius remove' onclick='del_shoose("+num+")' name='choose_"+num+"'> &nbsp"
+        );
+        $('.input_hidden').append(
+            "<input type='hidden' value='" +choose+"|"+bingzhong+ "'   name='choose_"+num+"'>"
+        );
+        $('.choose').val('');
+        $('select[name=keshi]').val(0);
+        $('select[name=bingzhong]').val(0);
+    }
+    /**
+     * 删除选择
+     */
+    function del_shoose(num) {
+        $('input[name=choose_'+num+']').remove();
+    }
+
+    /**
+     * 提交
+     */
+    $('form').submit(function(){
+        var textarea = $('.textarea').val();
+        if(textarea.length  < 1){
+            layer.msg("请输入题目描述",{icon:5,time:2000});
+            return;
+        }
+        var obj   = $('input[type=radio]');
+        for (var i=0;i<obj.length;i++){ //遍历Radio
+            if(obj[i].checked){
+                chkObjs=obj[i].value;
+            }
+        }
+        if(chkObjs == 'choose') {
+            var input_num = $('.checked').children('input').length;
+            if(input_num < 3) {
+                var num  = 3 - input_num;
+                var str = '请再增加'+num+'个选项';
+                layer.msg(str, {icon:5,time:2000});
+                return;
+            }
+		}
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+        var data = $("form").serializeArray();
+        postData = {};
+        $(data).each(function(i) {
+            postData[this.name] = this.value;
+        });
+        // console.log(postData);
+        $.ajax(
+            {
+                type:'post',
+                url:"__CONTROLLER__/ajax_add_question",
+                data:postData,
+                success:function(data){
+                    if(data['error'] == 0){
+                        layer.msg(data['error_det'], {icon:5,time:1000});
+                    }
+                    if(data['status'] == 1) {
+                        layer.msg('添加成功！', {icon:6,time:1000});
+                        setTimeout(closeCussent,1500);
+                    }
+                }
+            }
+        );
+
+    });
+
+    /**
+	 * 关闭窗口
+     */
+    function closeCussent() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+
+    /**
+	 * ajax题库首次加载
+	 *
+     */
+    $(document).ready(function(){
+        $.ajax({
+            type:'post',
+            url:"__CONTROLLER__/ajax_question_bank",
+            success:function(data){
+                $(".page").html(data);
+                reload_functon();
+            }
+		});
+	})
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

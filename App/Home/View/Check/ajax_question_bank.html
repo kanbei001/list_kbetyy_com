@@ -1,0 +1,158 @@
+
+		<div class="page-container">
+			<div class="text-c"> 日期范围：
+			<input type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="logmin" class="input-text Wdate" style="width:120px;">
+			 -
+			<input type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="logmax" class="input-text Wdate" style="width:120px;">
+
+			<button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 查找</button>
+			</div>
+			<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量导入</a> </span> <span class="r">共有数据：<strong>{$count}</strong> 条</span> </div>
+			<div class="mt-20">
+				<if condition="$list eq null">
+					暂无题目，请添加！
+					<else />
+					<table class="table table-border table-bordered table-hover table-bg table-sort">
+						<thead>
+						<tr class="text-c">
+							<th width="25"><input type="checkbox" name="" value="{$vo.id}"></th>
+							<th width="10">ID</th>
+							<th width="100">题目</th>
+							<th width="90">类型</th>
+							<th width="90">内容</th>
+							<th width="50">创建时间</th>
+						</tr>
+						</thead>
+						<tbody>
+
+						<foreach name="list" item="vo">
+							<tr class="text-c">
+								<td><input type="checkbox" value="{$vo.id}" name=""></td>
+								<td>{$vo.id}</td>
+								<td>{$vo.description}</td>
+								<td>
+									<if condition="$vo['type'] eq 'choose'">
+										选择题
+									</if>
+									<if condition="$vo['type'] eq 'write'">
+										自答题
+									</if>
+								</td>
+								<td>
+									<if condition="$vo['type'] eq 'choose'">
+										<foreach name="vo.content" item="invo">
+											{$invo}<br>
+										</foreach>
+									</if>
+								</td>
+								<td>{$vo.time|date="Y-m-d H:i:s",###}</td>
+						</foreach>
+						</tbody>
+					</table>
+				</if>
+
+			</div>
+		</div>
+		<div id="page">
+			{$page}
+		</div>
+<style>
+	#page{
+		margin:auto;
+	}
+	#page .current{
+		background: #5a98de;
+		color: #fff;
+		border: 1px solid #ccc;
+		cursor: pointer;
+		display: inline-block;
+		margin-left: 2px;
+		text-align: center;
+		text-decoration: none;
+
+		height: 26px;
+		line-height: 26px;
+		text-decoration: none;
+		margin: 0 0 6px 6px;
+		padding: 0 10px;
+		font-size: 14px;
+	}
+	#page .num,.first,.end{
+		border: 1px solid #ccc;
+		cursor: pointer;
+		display: inline-block;
+		margin-left: 2px;
+		text-align: center;
+		text-decoration: none;
+		color: #666;
+		height: 26px;
+		line-height: 26px;
+		text-decoration: none;
+		margin: 0 0 6px 6px;
+		padding: 0 10px;
+		font-size: 14px
+	}
+	#page .next,.prev{
+		border: 1px solid #ccc;
+		cursor: pointer;
+		display: inline-block;
+		margin-left: 2px;
+		text-align: center;
+		text-decoration: none;
+		color: #666;
+		height: 26px;
+		line-height: 26px;
+		text-decoration: none;
+		margin: 0 0 6px 6px;
+		padding: 0 10px;
+		font-size: 14px;
+	}
+
+</style>
+<script>
+    /**
+     * ajax题库成功后回调加载函数封装
+     */
+	$("#page  a").click(function(){
+		var href = $(this).attr('href');
+		$(this).attr('href','javascript:');
+		$.ajax({
+			type:'post',
+			url:href,
+			success:function(data){
+				$(".page").html(data);
+				//reload_functon();
+			}
+		});
+	});
+
+    /**
+	 * 批量导入
+	 *
+     */
+    function datadel() {
+		layer.confirm('确认要导入吗？',function(index) {
+			var num = 1;
+			var postData = {};
+			$("input[type='checkbox']:checkbox:checked").each(function(i){
+				postData[num] = this.value;
+				num++;
+			})
+			postData['questionnaire'] = $('input[name=questionnaire]').val();
+			console.log(postData);
+			$.ajax({
+				type:'POST',
+				url:'__CONTROLLER__/lay_in',
+				data:postData,
+				success:function(data) {
+					if(data['status'] == 1) {
+						layer.msg('导入成功！', {icon:6,time:1000});
+					}else{
+						layer.msg('导入失败！', {icon:6,time:1000});
+					}
+				}
+			});
+		})
+	}
+
+</script>

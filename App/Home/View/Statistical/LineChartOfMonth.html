@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="__PUBLIC__/lib/html5shiv.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="__PUBLIC__/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>折线图</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 统计管理 <span class="c-gray en">&gt;</span> 折线图 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:void(0)" onclick="location.reload()" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="f-14 c-error">特别声明：康贝儿童医院挂号统计折线表</div>
+	<div id="container" style="min-width:700px;height:400px"></div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__PUBLIC__/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="__PUBLIC__/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__PUBLIC__/lib/hcharts/Highcharts/5.0.6/js/highcharts.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/hcharts/Highcharts/5.0.6/js/modules/exporting.js"></script>
+<script type="text/javascript">
+    var str = "<?php echo $dateNum; ?>";
+$(function () {
+    Highcharts.chart('container', {
+        title: {
+            text: '<?php echo $_GET['date']; ?>挂号量报表',
+            x: -20 //center
+        },
+        subtitle: {
+            text: '来源:康贝儿童医院',
+            x: -20
+        },
+        xAxis: {
+            categories: [<?php $arrNum = count($monthAllData); $arrNum -=1; foreach($monthAllData as $k=>$v) { if($k != 'all') { echo  '\''.$k.'日\''; if($k<$arrNum) {echo ',';}}} ?>] //
+        },
+        yAxis: {
+            title: {
+                text: '挂号量'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '位'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{
+            name: '来院',
+            data: [<?php $arrNum = count($monthFirstData); $arrNum -=1; foreach($monthFirstData as $k=>$v) { if($k != 'all') { echo  $v; if($k<$arrNum) {echo ',';}}} ?>]
+        }, {
+            name: '未到',
+            data: [<?php $arrNum = count($monthZeroData); $arrNum -=1; foreach($monthZeroData as $k=>$v) { if($k != 'all') { echo  $v; if($k<$arrNum) {echo ',';}}} ?>]
+        }, {
+            name: '总额',
+            data: [<?php $arrNum = count($monthAllData); $arrNum -=1; foreach($monthAllData as $k=>$v) { if($k != 'all') { echo  $v; if($k<$arrNum) {echo ',';}}} ?>]
+        }]
+    });
+});
+</script>
+<div class="page-container">
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+			<thead>
+				<tr class="text-c">
+                                        <th width="50">项目</th>
+                                        <?php
+                                            foreach($monthAllData as $k=>$v){
+                                                if($k == 'all') {
+                                                    break;
+                                                }
+                                                if($v > 0 ) {
+                                                ?><th width="10" style="text-align:center;"><a class="btn btn-primary radius ChartForDay" href="javascript:;" style="" data-testcount="<?php echo $_GET['date'].'-'.$k; ?>">{$k}</th><?php
+                                                }else{
+                                                    ?><th width="10" style="text-align:center;"><a class="btn btn-primary radius test" href="javascript:;" style="text-align:center;width:20px;padding-left:0px;padding-right:0px;background-color: #999999">{$k}</th><?php
+                                                }
+                                                
+                                            }
+                                        ?>
+                                        <style>
+                                                    
+</style>
+                                        <th width="50">合计</th>
+			</thead>
+			<tbody>
+                                <tr class="text-c">
+					<td>来院</td>
+                                        <foreach name="monthFirstData" item="vo">
+                                            <td>{$vo}</td>
+                                        </foreach>
+				</tr>
+                                <tr class="text-c">
+					<td>未到</td>
+                                        <foreach name="monthZeroData" item="vo">
+                                            <td>{$vo}</td>
+                                        </foreach>
+				</tr>
+                                <tr class="text-c">
+					<td>总额</td>
+                                        <foreach name="monthAllData" item="vo">
+                                            <td>{$vo}</td>
+                                        </foreach>
+				</tr>
+                                <tr class="text-c">
+					<td>来院比率</td>
+                                        <foreach name="monthPercentageData" item="vo">
+                                            <td>{$vo}%</td>
+                                        </foreach>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+    
+    <script>
+        function seach() {
+            var selectYear = $("#select").val();
+            var url = window.location.href;
+            window.location.href = window.location.href+"/year/"+selectYear;
+        }
+        $(".ChartForDay").click(function(){
+            var date = $(this).attr("data-testcount"); 
+            var hostUrl = 'http://'+window.location.hostname+"/index.php/Home/statistical/LineChartOfDay/date/"+date;
+            creatIframe(hostUrl,date+'挂号量报表')
+        });
+    </script>
+</body>
+</html>
